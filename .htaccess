@@ -1,0 +1,68 @@
+# 启用浏览器缓存
+<IfModule mod_expires.c>
+    ExpiresActive On
+    
+    # 图片缓存1年
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    
+    # CSS和JavaScript缓存1月
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    
+    # 字体文件缓存1年
+    ExpiresByType application/x-font-woff "access plus 1 year"
+    ExpiresByType application/x-font-woff2 "access plus 1 year"
+</IfModule>
+
+# 启用GZIP压缩
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/css application/javascript
+    AddOutputFilterByType DEFLATE image/svg+xml image/x-icon
+</IfModule>
+
+# 启用Keep-Alive
+<IfModule mod_headers.c>
+    Header set Connection keep-alive
+</IfModule>
+
+# 图片缓存和压缩配置
+<IfModule mod_headers.c>
+    # 启用浏览器缓存
+    <FilesMatch "\.(jpg|jpeg|png|gif|webp)$">
+        Header set Cache-Control "max-age=31536000, public"
+        Header set Vary "Accept-Encoding"
+    </FilesMatch>
+</IfModule>
+
+# 启用图片压缩
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE image/svg+xml
+    AddOutputFilterByType DEFLATE image/x-icon
+</IfModule>
+
+# 添加图片类型支持
+AddType image/webp .webp
+
+# 移动端特定缓存和压缩
+<IfModule mod_headers.c>
+    # 检测移动设备
+    RewriteCond %{HTTP_USER_AGENT} "mobile|android|touch|iphone|ipad|tablet" [NC]
+    
+    # 移动端特定缓存策略
+    <FilesMatch "\.(jpg|jpeg|png|gif|webp)$">
+        Header set Cache-Control "max-age=2592000, public"
+    </FilesMatch>
+    
+    # 启用Keep-Alive
+    Header set Connection keep-alive
+</IfModule>
+
+# 移动端图片压缩
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE image/jpeg
+    AddOutputFilterByType DEFLATE image/png
+    AddOutputFilterByType DEFLATE image/gif
+</IfModule>
